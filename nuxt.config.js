@@ -1,3 +1,5 @@
+import FlareWebPackPluginSourcemap from '@flareapp/flare-webpack-plugin-sourcemap';
+
 export default {
 	// Global page headers: https://go.nuxtjs.dev/config-head
 	head: {
@@ -37,5 +39,17 @@ export default {
 	modules: [],
 
 	// Build Configuration: https://go.nuxtjs.dev/config-build
-	build: {},
+	build: {
+		extend(config, { isDev, isClient }) {
+			if (isDev) config.mode = 'development';
+			if (isClient) {
+				config.plugins.push(new FlareWebPackPluginSourcemap({ key: process.env.FLARE_KEY }))
+				config.devtool = 'hidden-source-map';
+			}
+		}
+	},
+
+	publicRuntimeConfig: {
+		flareKey: process.env.FLARE_KEY
+	}
 }
